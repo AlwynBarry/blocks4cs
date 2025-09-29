@@ -1,7 +1,7 @@
 {
 	"name": "blocks4cs",
 	"version": "1.0.0",
-	"description": "Display Data on Events and SmallGroups from ChurchSuite",
+	"description": "Gutenberg Blocks to display Data on Events and SmallGroups from ChurchSuite",
 	"author": "dramb",
 	"license": "GPL-2.0-or-later",
 	"homepage": "https://github.com/AlwynBarry/blocks4cs",

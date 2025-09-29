@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Blocks For ChurchSuite
  * Plugin URI:        https://github.com/AlwynBarry/blocks4cs
- * Description:       Display Data for Events and SmallGroups from ChurchSuite
+ * Description:       Butenberg blocks to display Data for Events and SmallGroups from ChurchSuite
  * Version:           1.0.0
  * Requires at least: 6.7
  * Requires PHP:      7.4

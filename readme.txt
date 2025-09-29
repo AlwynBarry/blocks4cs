@@ -1,12 +1,13 @@
-=== Integration for ChurchSuite ===
+=== Blocks for ChurchSuite ===
 * Contributors: dramb
-* Tags: Events, ChurchSuite, Featured
+* Tags: Events, Groups, ChurchSuite, Blocks
 * Requires at least: 6.7
 * Tested up to: 6.8
 * Stable tag: 1.0.0
 * License: GPLv2 or later
 
-Blocks4CS is a plugin providing blocks that enable display of data from ChurchSuite
+Blocks4CS is a plugin providing blocks that enable display of event and
+smallgroup data from ChurchSuite in various ways.
 
 
 == Description ==
