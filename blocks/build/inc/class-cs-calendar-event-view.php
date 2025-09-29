@@ -64,7 +64,8 @@ use amb_dev\b4cs\Cs_Event as Cs_Event;
 					. ( ( $this->cs_event->is_identifier() ) ? ' id="b4cs-event-' . $this->cs_event->get_identifier() . '" ' : '' )
 					. ' class="b4cs-calendar-event'
 					. ' b4cs-event-status-' . $this->cs_event->get_status()
-					. ( ( $this->cs_event->is_category() ) ? ' ' . $this->cs_event->get_category_as_html_class() : '' )
+					. ( ( $this->cs_event->is_category() ) ? ' b4cs-category-' . $this->cs_event->get_category_as_html_class() : '' )
+					. ( ( $this->cs_event->is_category_id() ) ? ' b4cs-category-id-' . strval( $this->cs_event->get_category_id() ) : '')
 					. '">' . "\n";
 		
 		// Display the caret link to reveal the hidden event details

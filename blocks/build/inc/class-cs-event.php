@@ -51,17 +51,19 @@ use amb_dev\b4cs\Cs_Item as Cs_Item;
 	 *
 	 * @since   1.0.0
 	 * @access  protected
-	 * @var     \DateTime	$start_date	The santized start date and time of an event or null if no start date/time
-	 * @var		\DateTime	$end_date	The sanitized end date and time of an event or null if no end date/time
-	 * @var		string		$address	The sanitized address where the event is happening, or '' if not supplied
-	 * @var		string		$status		The status of the event - one of the items from the EVENT_STATUS array
-     * @var		string		$category	The sanitized id of the category of this event, or 0 if not supplied
+	 * @var     \DateTime	$start_date		The santized start date and time of an event or null if no start date/time
+	 * @var		\DateTime	$end_date		The sanitized end date and time of an event or null if no end date/time
+	 * @var		string		$address		The sanitized address where the event is happening, or '' if not supplied
+	 * @var		string		$status			The status of the event - one of the items from the EVENT_STATUS array
+     * @var		string		$category		The sanitized name of the category of this event, or '' if not supplied
+     * @var		int			$category_id	The sanitized id of the category of this event, or 0 if not supplied
 	 */
 	protected readonly \DateTime $start_date;
 	protected readonly \DateTime $end_date;
 	protected readonly string $address;
 	protected readonly string $status;
 	protected readonly string $category;
+	protected readonly int $category_id;
 
     /*
      * Construct the initial values, sanitising all input provided to ensure all data is valid.
@@ -77,6 +79,7 @@ use amb_dev\b4cs\Cs_Item as Cs_Item;
 			$this->address = $this->sanitize_address( $event_obj );
 			$this->status = $this->sanitize_status( $event_obj );
 			$this->category = $this->sanitize_category( $event_obj );
+			$this->category_id = $this->sanitize_category_id( $event_obj );
 		} else {
 			// Set all the strings to default values - usually ''
 			// Has to be set here because readonly variables can only be set once
@@ -85,6 +88,7 @@ use amb_dev\b4cs\Cs_Item as Cs_Item;
 			$this->address = '';
 			$this->status = 'cancelled';
 			$this->category = '';
+			$this->category_id = 0;
 		}
 	}
 
@@ -167,7 +171,7 @@ use amb_dev\b4cs\Cs_Item as Cs_Item;
 	}
 
 	/*
-	 * Return the event category id from the JSON event object, or 0 if the category name is missing or malformed
+	 * Return the event category name from the JSON event object, or '' if the category name is missing or malformed
 	 * The category string is sanitized to remove any html special characters, and to trim leading and trailing spaces
 	 * 
 	 * Note: the object parameter must be checked to be a valid object before this is called
@@ -181,6 +185,23 @@ use amb_dev\b4cs\Cs_Item as Cs_Item;
 		return ( isset( $event_obj->category->name ) ) 
 					? trim( wp_strip_all_tags( $event_obj->category->name ) )
 					: '';
+	}
+
+	/*
+	 * Return the event category id from the JSON event object, or 0 if the category name is missing or malformed
+	 * The category number is sanitized to ensure it is a valid natural number, or set to 0 otherwise.
+	 * 
+	 * Note: the object parameter must be checked to be a valid object before this is called
+	 * Developer Note: Override this function if the category name is in a different place in the new object
+	 * 
+	 * @since	1.0.0
+	 * @param	\stdclass	$event_obj	the ChurchSuite JSON object for this event
+	 * @return	int						the category id number or 0 if invalid
+	 */
+	protected function sanitize_category_id( \stdclass $event_obj ) : int {
+		return ( isset( $event_obj->category->id ) && is_numeric( $event_obj->category->id ) && ( intval( $event_obj->category->id ) >= 0) ) 
+					? intval( $event_obj->category->id )
+					: 0;
 	}
 
 	/*
@@ -297,14 +318,30 @@ use amb_dev\b4cs\Cs_Item as Cs_Item;
 	public function get_category() : string { return $this->category; }
 	
 	/*
+	 * Check if the event has a supplied category
+	 * 
+	 * @since	1.0.0
+	 * @return	bool	true if the event has a supplied category id (should always be so)
+	 */
+	public function is_category_id() : bool { return ( $this->category_id >= 0 ); }
+
+	/*
+	 * Get the category name for the event
+	 * 
+	 * @since	1.0.0
+	 * @return	string	the (sanitized) category number or 0 if no category was given for this event 
+	 */
+	public function get_category_id() : int { return $this->category_id; }
+
+	/*
 	 * Get the category name for the event modified so it could be used as a HTML class name
 	 * Note: The returned category is modified to return only the A-Za-z0-9 and hyphen characters
 	 * 		 All underscores become hyphens, all non alpha-numeric are discarded, and consecutive hyphens
 	 * 		 are removed to become a single hyphen.  This allows the category name to be used as a class name
 	 * 
 	 * @since	1.0.0
-	 * @return	string	the category name modified to add a leading 'b4cs-' and to replace non alpha-numeric
-	 * 					with single hyphen.  Return '' if no category name was given for this event. 
+	 * @return	string	the category name modified to replace non alpha-numeric with
+	 * 					hyphen.  Return '' if no category name was given for this event. 
 	 */
 	public function get_category_as_html_class() : string {
 		$result = $this->get_category();
@@ -320,10 +357,9 @@ use amb_dev\b4cs\Cs_Item as Cs_Item;
 			// Uppercase to lowercase
 			$result = strtolower( $result );
 			// Add b4cs- leading string if the result is not the empty string
-			$result = ( ( is_null( $result ) ) || ( $result === '' ) ) ? '' : 'b4cs-' . $result;
+			$result = ( ( is_null( $result ) ) || ( $result === '' ) ) ? '' : $result;
 		}
 		return $result;
 	}
-
 
 }
