@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "b4cs/cs-event-list",
+  "version": "0.1.0",
+  "title": "Event List for ChurchSuite",
+  "category": "widgets",
+  "icon": "megaphone",
+  "description": "Display a list of Events from ChurchSuite",
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": [
+      "center",
+      "wide",
+      "full"
+    ],
+    "color": {
+      "text": true,
+      "background": true,
+      "gradients": true,
+      "link": true
+    },
+    "spacing": {
+      "padding": true,
+      "margin": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true,
+      "textAlign": true
+    }
+  },
+  "attributes": {
+    "church_name": {
+      "type": "string",
+      "default": "demo"
+    },
+    "days_ahead": {
+      "type": "integer",
+      "default": 5
+    },
+    "num_results": {
+      "type": "integer",
+      "default": 20
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "textdomain": "blocks4cs",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "script": [],
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js"
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "b4cs/cs-calendar",
+  "version": "0.1.0",
+  "title": "Calendar for ChurchSuite",
+  "category": "widgets",
+  "icon": "megaphone",
+  "description": "Display a monthly calendar of Events from ChurchSuite",
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": [
+      "center",
+      "wide",
+      "full"
+    ],
+    "color": {
+      "text": true,
+      "background": true,
+      "gradients": true,
+      "link": true
+    },
+    "spacing": {
+      "padding": true,
+      "margin": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true,
+      "textAlign": true
+    }
+  },
+  "attributes": {
+    "church_name": {
+      "type": "string",
+      "default": "demo"
+    }
+  },
+  "textdomain": "blocks4cs",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "script": [
+    "file:../js/b4cs-scripts.js"
+  ],
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js"
+}

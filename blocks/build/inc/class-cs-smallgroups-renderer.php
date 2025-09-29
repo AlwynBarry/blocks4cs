@@ -1,0 +1,96 @@
+<?php
+
+namespace amb_dev\b4cs;
+
+
+require_once plugin_dir_path( __FILE__ ) . 'class-churchsuite.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-cs-renderer.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-cs-group.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-cs-group-view.php';
+
+use amb_dev\b4cs\ChurchSuite as ChurchSuite;
+use amb_dev\b4cs\Cs_Renderer as Cs_Renderer;
+use amb_dev\b4cs\Cs_Group as Cs_Group;
+use amb_dev\b4cs\Cs_Group_View as Cs_Group_View;
+
+
+/**
+ * A child of Cs_Shortcode to provide the creation of the HTML response for SmallGroups.
+ * This class only provides the external 'wrapper' HTML for the groups, calling a
+ * instance of Cs_Group_View to display each group in a card-like style with group photo
+ * and group meeting time and location details.
+ * 
+ * Below the class we also provide a function which can be supplied to Wordpress to
+ * run the renderer.  This function creates an instance of the renderer class and calls
+ * the render() function in the class to run the renderer using the attributes supplied.
+ * 
+ * To call the shortcode, you must supply the church name used in the normal ChurchSuite
+ * web url (e.g. from https://mychurch.churchsuite.com/ - 'mychurch' is the name to supply)
+* Use the church_name="mychurch" parameter to supply the church name.  You can also use
+ * any of the group parameters provided by the churchsuite API, listed at:
+ * https://github.com/ChurchSuite/churchsuite-api/blob/master/modules/embed.md#calendar-json-feed
+ *
+ * @link       https://https://github.com/AlwynBarry
+ * @since      1.0.0
+ *
+ * @package    blocks4cs
+ * @subpackage blocks4cs/inc
+ * @author     Alwyn Barry <alwyn_barry@yahoo.co.uk>
+ */
+class Cs_Smallgroups_Renderer extends Cs_Renderer {
+
+	/*
+	 * Process the supplied attributes to leave only valid parameters, create the URLs
+	 * required for the JSON feed from ChurchSuite and create the means to communicate via
+	 * that JSON feed.
+	 *
+ 	 * @since	1.0.0
+	 * @param	array() $atts		An array of strings representing the attributes of the JSON call
+	 * 								Mandatory params: church_name - the ChurchSuite recognised name of the church
+	 */
+	public function __construct( $atts ) {
+		parent::__construct( $atts, ChurchSuite::GROUPS );
+	}
+		
+	/*
+	 * Use the JSON response to create the HTML to display the groups.
+	 *
+	 * For each small group we return what the CS_Group_View returns, all within a flex div.
+	 * 
+ 	 * @since	1.0.1
+ 	 * @param	string	$JSON_response	the array of \stdclass objects from the JSON response
+ 	 * 									from which the HTML will be created for the shortcode response.
+	 * @return	string					the HTML to render the group list, or '' if the JSON response fails
+	 */
+	protected function get_HTML_response( array $JSON_response ) : string {
+		$output = '';
+		if ( ! is_null( $JSON_response ) ) {
+			$output = '<div class="b4cs-smallgroups b4cs-row">' . "\n";
+			foreach ( $JSON_response as $group_obj ) {
+				$group = new Cs_Group( $group_obj );
+			    $group_view = new Cs_Group_View( $this->cs, $group );
+				$output .= $group_view->display();
+				// clear the group and view objects as we go so that we keep memory usage low
+				unset( $group_view );
+				unset( $group );
+			}
+			$output .= '</div>' . "\n";
+		}
+		// Return the HTML response
+		return $output;
+	}
+
+}
+
+
+/*
+ * Shortcode to be used in the content. Displays the featured events in nested DIVs that can be styled.
+ *
+ * @since 1.0.0
+ * @param	array()	$atts	Array supplied by Wordpress of params to the shortcode
+ * 							church_name="mychurch" is required - with "mychurch" replaced with your church name
+ */
+function b4cs_smallgroups_render( $atts ) {
+	return ( new Cs_Smallgroups_Renderer( $atts ) )->render();
+}
+	

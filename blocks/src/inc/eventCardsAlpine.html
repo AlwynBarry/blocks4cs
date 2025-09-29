@@ -1,0 +1,27 @@
+    <div class="b4cs-event-cards b4cs-row">
+      <template x-for="event in events">
+        <!-- There can only be one element within the template -->
+        <div :id="event.identifier" :class="event.status" class="b4cs-card b4cs-event-card">
+          <div class="b4cs-event-card-image-area">
+            <template x-if="event.image?.medium">
+              <img :src="event.image?.medium">
+            </template>
+          </div>
+          <div class="b4cs-event-card-details-area">
+            <div class="b4cs-event-name">
+                <a :href="event.link" class="b4cs-event-link" target="_blank"><span x-text="event.name"></span></a>
+            </div>
+            <div class="b4cs-date">
+                <!-- Event times are day.js instances - see https://day.js.org/ for formatting options -->
+                <span x-text="event.start.format('ll')" class="b4cs-date-gliph"></span>
+            </div>
+            <div class="b4cs-time">
+                <span x-text="event.allDay ? 'All Day' : event.start.format('h:mma')" class="b4cs-time-gliph b4cs-start-time"></span>
+                <span x-text="event.allDay ? '' : ' - ' + event.end.format('h:mma')" class="b4cs-end-time"></span>
+            </div>
+            <div class="b4cs-location"><span x-text="event.location" class="b4cs-location-gliph"></span></div>
+            <div class="b4cs-address"><span x-text="event.postcode"></span></span></div>
+          </div>
+        </div>
+      </template>
+    </div>
