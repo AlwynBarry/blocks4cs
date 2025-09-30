@@ -35,6 +35,10 @@
     "church_name": {
       "type": "string",
       "default": "demo"
+    },
+    "sites": {
+      "type": "string",
+      "default": ""
     }
   },
   "textdomain": "blocks4cs",

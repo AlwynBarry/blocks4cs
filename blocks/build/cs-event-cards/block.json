@@ -48,9 +48,29 @@
       "type": "boolean",
       "default": true
     },
-    "align": {
+    "categories": {
       "type": "string",
-      "default": "right"
+      "default": ""
+    },
+    "q": {
+      "type": "string",
+      "default": ""
+    },
+    "event_ids": {
+      "type": "string",
+      "default": ""
+    },
+    "merge": {
+      "type": "string",
+      "default": ""
+    },
+    "sequence": {
+      "type": "integer",
+      "default": 0
+    },
+    "sites": {
+      "type": "string",
+      "default": ""
     }
   },
   "textdomain": "blocks4cs",

@@ -46,55 +46,55 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={__('Calendar Configuration')}
+					title={ __( "Calendar Configuration", "blocks4cs" ) }
 					initialOpen={true}
 				>
 					<PanelRow>
 						<TextControl
-							label="ChurchSuite Church Name"
+							label={ __( "ChurchSuite Church Name", "blocks4cs" ) }
 							onChange={ ( church_name ) => setAttributes( { church_name : church_name } ) }
 							value={ attributes.church_name }
-							help="The church name from the start of the ChurchSuite URL"
+							help={ __( "The church name from the start of the ChurchSuite URL", "blocks4cs" ) }
 						/>
 					</PanelRow>	
 					<PanelRow>
 						<TextControl
-							label="Calendar Categories"
+							label={ __( "Calendar Categories", "blocks4cs" ) }
 							onChange={ ( new_categories ) => setAttributes( { categories : new_categories } ) }
 							value={ attributes.categories }
-							help={ "Comma separated category numbers" + ( attributes.categories ? " - only category(s) " + attributes.categories : " - all categories" ) }
+							help={ __( "Comma separated category numbers", "blocks4cs" ) + ( attributes.categories ? " - " + __( "only category(s)", "blocks4cs" ) + ": " + attributes.categories : " - " + __( "all categories", "blocks4cs" ) ) }
 						/>
 					</PanelRow>	
 				</PanelBody>
 
 				<PanelBody
-					title={__('Calendar Advanced Controls')}
+					title={ __( "Calendar Advanced Controls", "blocks4cs" ) }
 					initialOpen={false}
 				>
 					<PanelRow>
 						<TextControl
-							label="Event name filter"
+							label={ __( "Event name filter", "blocks4cs" ) }
 							onChange={ ( new_query ) => setAttributes( { q : new_query } ) }
 							value={ attributes.q }
-							help={ ( attributes.q == "" ) ? "All events" : "Return only events with '" + attributes.q + "' in the event name" }
+							help={ ( attributes.q == "" ) ? __( "All events", "blocks4cs" ) : __( "Return only events with", "blocks4cs" ) +  " '" + attributes.q + "' " + __( "in the event name", "blocks4cs" ) }
 						/>
 					</PanelRow>	
 					<PanelRow>
 						<NumberControl
-							label="Sequence"
+							label={ __( "Sequence", "blocks4cs" ) }
 							min={ 0 }
 							max={ 1000 }
 							onChange={ ( new_sequence ) => setAttributes( { sequence : isNaN( parseInt( new_sequence ) ) ? 0 : ( parseInt( new_sequence ) >= 0 ? parseInt( new_sequence ) : 0 ) } ) }
 							value={ attributes.sequence }
-							help={ "Filter by sequence Id: " + ( attributes.sequence ? "Events from Sequence ID: " + attributes.sequence : "All events" ) }
+							help={ __( "Filter by sequence Id", "blocks4cs" ) + ": " + ( attributes.sequence ? __( "Events from Sequence ID", "blocks4cs" ) + ": " + attributes.sequence : __( "All events", "blocks4cs" ) ) }
 						/>
 					</PanelRow>
 					<PanelRow>
 						<TextControl
-							label="Sites"
+							label={ __( "Sites", "blocks4cs" ) }
 							onChange={ ( new_sites ) => setAttributes( { sites : new_sites } ) }
 							value={ attributes.sites }
-							help={ "Comma separated site numbers" + ( attributes.sites ? " - only events from site(s) " + attributes.sites : " - events from all sites" ) }
+							help={ __( "Comma separated site numbers", "blocks4cs" ) + " - " + ( attributes.sites ? __( "Only events from site(s)", "blocks4cs" ) + ": " + attributes.sites : __( "Events from all sites", "blocks4cs" ) ) }
 						/>
 					</PanelRow>	
 				</PanelBody>

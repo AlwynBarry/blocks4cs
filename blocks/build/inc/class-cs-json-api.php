@@ -37,12 +37,12 @@ class Cs_JSON_API {
 										 'categories' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_natural_array',
 										 'site' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_natural',
 										 'sites' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_natural_array',
-										 'event' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_natural',
-										 'events' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_natural_array',
+										 /* 'event' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_positive',		 /* Note: seems not to work in CS */
+										 'event_ids' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_natural_array', /* Note: event_ids does what the CS API docs say event_ids[] does! */
 										 'q' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_string',
 										 'embed_signup' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_boolean',
 										 'public_signup' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_boolean',
-										 'sequence' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_natural',
+										 'sequence' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_positive',
 										 'page' => '\amb_dev\b4cs\Cs_JSON_API::sanitize_positive'
 									   ];
 	public readonly array $PERMITTED_PARAMS;
@@ -233,7 +233,7 @@ class Cs_JSON_API {
 	 * @return string			the sanitized natural array values or '' if
 	 * 							none of the values in the array was valid
 	 */ 
-	protected static function sanitize_natural_array( array $values ) : string {
+	protected static function sanitize_natural_array( string $values ) : string {
 		$valuesArray = explode( ',', $values );
 		$result = '';
 		for ( $i = 0; $i < count( $valuesArray ); $i++ ) {

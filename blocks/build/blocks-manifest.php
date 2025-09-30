@@ -40,6 +40,22 @@ return array(
 			'church_name' => array(
 				'type' => 'string',
 				'default' => 'demo'
+			),
+			'categories' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'q' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'sequence' => array(
+				'type' => 'integer',
+				'default' => 0
+			),
+			'sites' => array(
+				'type' => 'string',
+				'default' => ''
 			)
 		),
 		'textdomain' => 'blocks4cs',
@@ -104,9 +120,29 @@ return array(
 				'type' => 'boolean',
 				'default' => true
 			),
-			'align' => array(
+			'categories' => array(
 				'type' => 'string',
-				'default' => 'right'
+				'default' => ''
+			),
+			'q' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'event_ids' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'merge' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'sequence' => array(
+				'type' => 'integer',
+				'default' => 0
+			),
+			'sites' => array(
+				'type' => 'string',
+				'default' => ''
 			)
 		),
 		'textdomain' => 'blocks4cs',
@@ -170,6 +206,30 @@ return array(
 			'featured' => array(
 				'type' => 'boolean',
 				'default' => false
+			),
+			'categories' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'q' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'event_ids' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'merge' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'sequence' => array(
+				'type' => 'integer',
+				'default' => 0
+			),
+			'sites' => array(
+				'type' => 'string',
+				'default' => ''
 			)
 		),
 		'textdomain' => 'blocks4cs',
@@ -221,6 +281,10 @@ return array(
 			'church_name' => array(
 				'type' => 'string',
 				'default' => 'demo'
+			),
+			'sites' => array(
+				'type' => 'string',
+				'default' => ''
 			)
 		),
 		'textdomain' => 'blocks4cs',

@@ -20,8 +20,6 @@ import './style.scss';
 import Edit from './edit';
 import metadata from './block.json';
 
-import b4cs_event_list_app from '../js/b4cs-alpine-apps.js';
-
 /**
  * Every block starts by registering a new block type definition.
  *
