@@ -45,6 +45,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
+
 				<PanelBody
 					title={__('Small Groups ChurchSuite Source')}
 					initialOpen={true}
@@ -54,10 +55,27 @@ export default function Edit( { attributes, setAttributes } ) {
 							label="ChurchSuite Church Name"
 							onChange={ ( new_church_name ) => setAttributes( { church_name : new_church_name } ) }
 							value={ attributes.church_name }
+							help="The church name from the start of the ChurchSuite URL"
 						/>
 					</PanelRow>	
 				</PanelBody>
+
+				<PanelBody
+					title={__('Small Groups Advanced Controls')}
+					initialOpen={false}
+				>				
+					<PanelRow>
+						<TextControl
+							label="Sites"
+							onChange={ ( new_sites ) => setAttributes( { sites : new_sites } ) }
+							value={ attributes.sites }
+							help={ "Comma separated site numbers" + ( attributes.sites ? " - only events from site(s) " + attributes.sites : " - events from all sites" ) }
+						/>
+					</PanelRow>	
+				</PanelBody>
+				
 			</InspectorControls>
+
 			<div { ...useBlockProps() }>
 				<ServerSideRender
 					block="b4cs/cs-smallgroups"

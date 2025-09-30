@@ -31,6 +31,22 @@
     	"church_name": {
     		"type": "string",
     		"default": "demo"
+    	},
+    	"categories": {
+    		"type": "string",
+    		"default": ""
+    	},
+    	"q": {
+     		"type": "string",
+    		"default": ""
+    	},
+    	"sequence": {
+     		"type": "integer",
+    		"default": 0
+    	},
+    	"sites": {
+     		"type": "string",
+    		"default": ""
     	}
 	},
 	"textdomain": "blocks4cs",

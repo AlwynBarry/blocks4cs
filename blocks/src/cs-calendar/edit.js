@@ -46,7 +46,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={__('Calendar Source')}
+					title={__('Calendar Configuration')}
 					initialOpen={true}
 				>
 					<PanelRow>
@@ -54,9 +54,51 @@ export default function Edit( { attributes, setAttributes } ) {
 							label="ChurchSuite Church Name"
 							onChange={ ( church_name ) => setAttributes( { church_name : church_name } ) }
 							value={ attributes.church_name }
+							help="The church name from the start of the ChurchSuite URL"
+						/>
+					</PanelRow>	
+					<PanelRow>
+						<TextControl
+							label="Calendar Categories"
+							onChange={ ( new_categories ) => setAttributes( { categories : new_categories } ) }
+							value={ attributes.categories }
+							help={ "Comma separated category numbers" + ( attributes.categories ? " - only category(s) " + attributes.categories : " - all categories" ) }
 						/>
 					</PanelRow>	
 				</PanelBody>
+
+				<PanelBody
+					title={__('Calendar Advanced Controls')}
+					initialOpen={false}
+				>
+					<PanelRow>
+						<TextControl
+							label="Event name filter"
+							onChange={ ( new_query ) => setAttributes( { q : new_query } ) }
+							value={ attributes.q }
+							help={ ( attributes.q == "" ) ? "All events" : "Return only events with '" + attributes.q + "' in the event name" }
+						/>
+					</PanelRow>	
+					<PanelRow>
+						<NumberControl
+							label="Sequence"
+							min={ 0 }
+							max={ 1000 }
+							onChange={ ( new_sequence ) => setAttributes( { sequence : isNaN( parseInt( new_sequence ) ) ? 0 : ( parseInt( new_sequence ) >= 0 ? parseInt( new_sequence ) : 0 ) } ) }
+							value={ attributes.sequence }
+							help={ "Filter by sequence Id: " + ( attributes.sequence ? "Events from Sequence ID: " + attributes.sequence : "All events" ) }
+						/>
+					</PanelRow>
+					<PanelRow>
+						<TextControl
+							label="Sites"
+							onChange={ ( new_sites ) => setAttributes( { sites : new_sites } ) }
+							value={ attributes.sites }
+							help={ "Comma separated site numbers" + ( attributes.sites ? " - only events from site(s) " + attributes.sites : " - events from all sites" ) }
+						/>
+					</PanelRow>	
+				</PanelBody>
+
 			</InspectorControls>
 			<div { ...useBlockProps() }>
 				<ServerSideRender

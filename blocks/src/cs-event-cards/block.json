@@ -44,11 +44,31 @@
     		"type": "boolean",
     		"default": true
     	},
-    	"align": {
-			"type": "string",
-			"default": "right"
-		}
-	},
+    	"categories": {
+    		"type": "string",
+    		"default": ""
+    	},
+    	"q": {
+     		"type": "string",
+    		"default": ""
+    	},
+    	"event_ids": {
+     		"type": "string",
+    		"default": ""
+    	},
+    	"merge": {
+    		"type": "string",
+    		"default": ""
+    	},
+    	"sequence": {
+     		"type": "integer",
+    		"default": 0
+    	},
+    	"sites": {
+     		"type": "string",
+    		"default": ""
+    	}
+   	},
 	"textdomain": "blocks4cs",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
