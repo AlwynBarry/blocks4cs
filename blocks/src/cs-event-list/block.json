@@ -32,6 +32,10 @@
     		"type": "string",
     		"default": "demo"
     	},
+    	"date_start": {
+			"type": "string",
+			"default": ""
+		},
     	"days_ahead": {
     		"type": "integer",
     		"default": 5

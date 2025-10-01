@@ -67,22 +67,31 @@ abstract class Cs_Events_Renderer extends Cs_Renderer {
 	}
 
 	/*
-	 * A helper function to set the date_end attribute if the days_ahead pseudo attribute is set
+	 * A helper function to set the date_end attribute if the days_ahead pseudo attribute is set,
+	 * adjusting for the date_start attribute if it has been set.
 	 * 
 	 * @since 1.0.0
 	 * @param array $atts		The attributes to be passed on to ChurchSuite
 	 * 							This value is modified to remove days_ahead and add a calculated date_end
 	 */
 	protected static function set_date_end( array &$atts ) {
-		// Defaulting the end date to anything decreases the JSON request time considerably
-		$date = new \DateTime();
+		// Set the start date either to be today or the date_start date if provided
+		$date =  new \DateTime();
+		if ( isset( $atts[ 'date_start' ] ) ) {
+			$date_start = \amb_dev\b4cs\Cs_JSON_API::sanitize_date( $atts[ 'date_start' ] );
+			if ( $date_start !== '' ) {
+				$date = new \DateTime( $date_start );
+			}
+		}
+		// Set the number of days to look ahead in the event query, defaulting to 5 days
+		$days_ahead = 5;
 		$date_interval = \DateInterval::createFromDateString('5 days');
 		if ( isset( $atts[ 'days_ahead' ] ) ) {
-			$days_ahead = $atts[ 'days_ahead' ];
+			$days_ahead = \amb_dev\b4cs\Cs_JSON_API::sanitize_natural( $atts[ 'days_ahead' ] );
 			// days_ahead is not a CS attribute, so remove it from the list of attributes
 			unset( $atts[ 'days_ahead' ] );
-			// Calculate the date interval from the days_ahead value given
-			if ( intval( $days_ahead ) >= 0 ) {
+			if ( $days_ahead !== '' ) {
+				// Calculate the date interval from the days_ahead value given
 				$date_interval = \DateInterval::createFromDateString( $days_ahead . ' days' );
 			}
 		}

@@ -288,6 +288,10 @@ div.b4cs-calendar-event .b4cs-calendar-hover-block .b4cs-description p {
 		width: 100%;
 	}
 	
+	div.b4cs-calendar div.b4cs-calendar-date-cell.b4cs-calendar-no-events {
+		display: none;
+	}
+	
 	div.b4cs-calendar div.b4cs-calendar-date-cell div.b4cs-day-content {
 		display: flex;
 		flex-direction: row;

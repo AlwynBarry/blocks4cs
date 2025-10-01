@@ -61,6 +61,7 @@ use amb_dev\b4cs\Cs_Calendar_Event_View as Cs_Calendar_Event_View;
 	protected \DateTime $month_end;
 	protected \DateTime $date_from;
 	protected \DateTime $date_to;
+	protected \DateTime $date_beyond; // A constant just to help mark when we're outside the calendar
 
 	/*
 	 * Process the supplied attributes to leave only valid parameters, create the URLs
@@ -100,6 +101,8 @@ use amb_dev\b4cs\Cs_Calendar_Event_View as Cs_Calendar_Event_View;
 		$this->month_end = self::get_month_end( $this->requested_date ); 
 		$this->date_from = self::get_sunday_before_month( $this->month_start ); 
 		$this->date_to = self::get_saturday_after_month( $this->month_start );
+		$this->date_beyond = clone $this->date_to;
+		$this->date_beyond->add( $this->one_day );
 
 		// Override or set the atts we need so we get the events for this month
 		$atts[ 'date_start' ] ??= $this->date_from->format( 'Y-m-d' );
@@ -273,11 +276,12 @@ use amb_dev\b4cs\Cs_Calendar_Event_View as Cs_Calendar_Event_View;
 	 * @since 1.0.1
 	 * @return	\string				a string that gives the top of a day cell
 	 */
-	protected function get_day_top( \DateTime $date, bool $in_month, bool $is_today ) : string {
+	protected function get_day_top( \DateTime $date, bool $in_month, bool $is_today, bool $has_events = true ) : string {
 		// Output the start of the table cell to display one day in the calendar
 		$output = '<div class="b4cs-calendar-date-cell'
 		                . ( ( $in_month ) ? ' b4cs-calendar-in-month' : ' b4cs-calendar-outside-month' )
 		                . ( ( $is_today ) ? ' b4cs-calendar-today' : '' )
+		                . ( ( $has_events ) ? '' : ' b4cs-calendar-no-events' )
 		                . '">' . "\n";
 		$output .= '  <div class="b4cs-day-content">' . "\n";
 		// Output the date.  Many of these fields are not displayed, but it allows styling choices
@@ -318,52 +322,56 @@ use amb_dev\b4cs\Cs_Calendar_Event_View as Cs_Calendar_Event_View;
 	 */
 	protected function get_HTML_response( array $JSON_response ) : string {
 		$output = '';
-		if ( ! is_null( $JSON_response ) ) {
-			$output .= $this->get_month_table_top( $this->requested_date );
-			$day_count = 0;
-			$date = clone $this->date_from;
-			$output .= self::get_day_top( $date, $this->is_date_in_month( $date ), $this->is_date_today( $date ) );
-			// Iterate over all events in the month; If none, the later loop will print out the blank month
-			foreach ( $JSON_response as $event_obj ) {
-				$event = new Cs_Event( $event_obj );
-				$event_date = clone $event->get_start_date();
+		$response_length = count( $JSON_response );
+
+		// Output the top of the calendar - the month name and the day names
+		$output .= $this->get_month_table_top( $this->requested_date );
+			
+		// Set up the variables needed to control the two loops
+		$date = clone $this->date_from;
+		$event_index = 0;
+			
+		// Fetch the event info for the first event, if we have one, so we can run the loop checks
+		$event = ( $event_index < $response_length ) ? new Cs_Event( $JSON_response[ $event_index ] ) : null;
+		$event_date = ( $event_index < $response_length ) ? clone $event->get_start_date() : clone $this->date_beyond;
+		$event_date->setTime( 0, 0 );
+
+		// Iterate through each day of the month we are to display
+		while ( $date <= $this->date_to ) {
+			$output .= self::get_day_top( $date, $this->is_date_in_month( $date ), $this->is_date_today( $date ), ( $event_date == $date ) );
+
+			// Output all the events on this day
+			while ( ( $event_index < $response_length ) && ( $event_date == $date ) ) {
+				
+				// Tell the event to display itself
+				$output .= ( new Cs_Calendar_Event_View( $this->cs, $event ) )->display();
+
+				// Get the next event, if one is available
+				$event_index++;
+				$event = ( $event_index < $response_length ) ? new Cs_Event( $JSON_response[ $event_index ] ) : null;
+				$event_date = ( $event_index < $response_length ) ? clone $event->get_start_date() : clone $this->date_beyond;
 				$event_date->setTime( 0, 0 );
-				// Fill in any empty dates before this event, up to the event date or the end of the month displayed
-				while ( ( $date < $event_date ) && ( $date < $this->date_to ) ) {
-					$output .= $this->get_day_bottom();
-					$date->add( $this->one_day );
-					$day_count++;
-					$output .= self::get_day_top( $date, $this->is_date_in_month( $date ), $this->is_date_today( $date ) );
-				}
-				// We should now be in the date of the event, but check just in case
-				if ( ( $date == $event_date ) && ( $date <= $this->date_to ) ) {
-					$event_view = new Cs_Calendar_Event_View( $this->cs, $event );
-					$output .= $event_view->display();
-					// clear the event and view objects as we go so that we keep memory usage low
-					unset( $event_view );
-					unset( $event );
-				}
+
 			}
+			
 			$output .= $this->get_day_bottom();
+			
+			// Move to the next day in the calendar
 			$date->add( $this->one_day );
-			$day_count++;
-			// Fill in any empty dates after the final event
-			while ( $date <= $this->date_to ) {
-				// Output a new cell for each new day
-				$output .= self::get_day_top( $date, $this->is_date_in_month( $date ), $this->is_date_today( $date ) );
-				$date->add( $this->one_day );
-				$day_count++;
-			}
-			$output .= $this->get_month_table_bottom();
 		}
+		
+		// Output the bottom of the calendar - just the div closures
+		$output .= $this->get_month_table_bottom();
+		
 		// Return the HTML response
 		return $output;
 	}
 
 }
 
+
 /*
- * Shortcode to be used in the content. Displays the requested events as 'cards' that can be styled.
+ * Render function to be used to display the calendar from within the block
  *
  * @since 1.0.0
  * @param	array()	$atts	Array supplied by Wordpress of params to the renderer

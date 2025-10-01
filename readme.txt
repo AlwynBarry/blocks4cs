@@ -95,9 +95,8 @@ https://github.com/ChurchSuite/churchsuite-api/blob/master/modules/embed.md
   You should see the block populate with events in the
   editor straightaway
   
-  You can adjust the number of future events you need in a page or post.
-  
-  You can also only show featured events by selecting that toggle.
+  You can ude the various parameters in the side bar to refine your
+  search for events - see below for the many options
   
   Because your calendar will have _many_ events, we can limit the number
   of events which are returned using the Number Of Events attribute
@@ -107,6 +106,29 @@ https://github.com/ChurchSuite/churchsuite-api/blob/master/modules/embed.md
   request from ChurchSuite will take too long to return.  So just
   experiment until you get the number of events over the time period
   you want.
+  
+  Other attributes allow you to refine the events returned as follows:
+
+	* Start Date  - the starting date to look for events
+	* Days Ahead  - the number of days ahead from the start date to look
+	* Number of Results - the number of events to display from those returned
+	* Featured    - whether to show only events marked as 'Featured'
+	
+  And, in the 'Advanced' group you can do further refinements:
+	* Categories  - only look for events in the categories whose category
+				    numbers are given
+    * Event Names - Only list events where the string given is in the
+                    event title (e.g. 'service' to return all services)
+	* Sites       - if you have a multi-site church, only look for events
+				    for the sites whose site numbers are given
+	* Events      - Only look for events in the list of event numbers
+                    (Useful if you want to highlight a few particular events)
+    * Merge       - List only the first event or all events in a sequence
+    * Sequence    - Only list events in a given sequence number
+    
+  Details of these attributes and their values can be found here:
+
+https://github.com/ChurchSuite/churchsuite-api/blob/master/modules/embed.md
 
 * For the *Event List block*, place the block into a page or post. Set
   the name of your ChurchSuite feed in the Church Name attribute (ie.
@@ -127,17 +149,21 @@ https://github.com/ChurchSuite/churchsuite-api/blob/master/modules/embed.md
   
   You should see the calendar block populate with events in the
   editor straightaway.
+  
+  Fewer customization parameters are available for this block because
+  only a subset of the parameters listed above make sense for a monthly
+  calendar.
 
 * For the *Smallgroups block*,, place the block into a page or post. Set
   the name of your ChurchSuite feed in the Church Name attribute (ie.
   the name that is at the start of your churchsuite url e.g.
   https://mychurch.churchsuite.com - the name is 'mychurch').
   
-  You should see the block populate with events in the
-  editor straightaway. 
+  You should see the block populate with groups in the
+  editor straightaway.
 
-See `https://github.com/ChurchSuite/churchsuite-api/blob/master/modules/embed.md=calendar-json-feed`
-for a full list of parameters that can be used.
+  The only parameter for SmallGroup lists that ChurchSuite supports is
+  the sites parameter, which you will find under the 'Advanced' section.
 
 
 == License ==
@@ -168,19 +194,62 @@ comment within the `blocks4cs.php` file.
 
 = I want to limit the number of events in the block =
 
-	You can use the Number of Events block parameter to show a
-	particular number of events:
+	You can use the Number of Events block attribute to show a
+	particular number of events.
 
-= Events List is not showing any results
+= The block is not showing any results =
 
-	By default the Events List only looks ahead 5 days.  If your future
-	events are beyond that nothing will show.  So just adjust the
-	Days Ahead attribute.
+	By default the Events List only looks ahead 5 days and Events Cards
+	only 20 days.  If your future events are beyond that nothing will
+	show, or if you are only looking for featured events or events
+	within a particular category or with a particular name, none may be
+	within the number of days being searched. So just adjust the Days
+	Ahead attribute or the search parameters.
+	
+= I've changed a search attribute but the seems to be no change to the results
+
+	All search attributes are 'sanitized' to legal values before they are
+	used, and if a sane legal value cannot be found the attribute is
+	discarded.  So, for example, a date like 2025-02-40 would be ignored.
+	The block doesn't change what you have entered into the attributes so
+	as not to confuse you.  So, just try some different attribute values
+	until you get something legal.  If in doubt, remove the block and add
+	a new block - this will start with 'sane' default values, and you
+	can test on the 'demo' site ChurchSuite provides to see what it
+	returns.  Alternatively, use the Church Name 'cambray' to test - it
+	has a busy programme of events and so most queries will return a
+	result if legal search values are given.
 
 = I want to change how the output looks: =
 
-	The output is formatted via css - just override the defaults in your
-	theme.
+	In general the blocks don't seek to set fonts and only use relative
+	text sizes.  So, by setting fonts or text size in surrounding
+	blocks you will see changes in the blocks themselves.  You can also
+	use the font size attributes in the style tab to set the base font
+	size.
+	
+	In addition to the text size, the background, margins and padding of
+	the containing box, and whether it is displayed in normal, wide or
+	full width can be adjusted from the block attributes in the sidebar
+	style tab.
+
+	For things like line or background color within the block, all block
+	output is formatted via css - just override the default css rules
+	in your theme.  All the CSS rules begin with 'b4cs-' and so these
+	are easy to find in your browser's inspector panes. Once overridden
+	in your theme css file you can make them fit well with your theme.
+	
+= I want a list of events which looks very different to those you provide =
+
+	Because there are css rules for every part of the block, there is a
+	lot you can do just in css.  For example, the dramatic change in
+	format of the calendar from a monthly grid to an events list when
+	it is displayed on a narrow screen is all accomplished by css rules.
+	So, you may be able to achieve what you want via css rule changes.
+
+	If your idea is dramatically different, however, please use the
+	support forum to put in a request for a new feature.  We will do
+	what we can to provide anything which might also be useful to others.
 
 
 == Screenshots ==
@@ -197,6 +266,20 @@ comment within the `blocks4cs.php` file.
 
 = 1.0.0 =
 
+**2025-09-29**
+* Added all ChurchSuite attributes to each block that were not previously
+  present.  Added the santizers for all the permitted attributes.  Added
+  i18n support to the blocks for potential future translators.  Tidied up
+  code where needed.  Removed now unused js scripts and html includes for
+  the old Alpine.js support.  Removed duplicated css and moved non-shared
+  styles into each block. Fixed an error in the display of calendar, and
+  made sure we remove days with no events from the small screen event list
+  rendering of the calendar. Edited the readme.txt to reflect these changes.
+
+**2025-09-27**
+* Added some block attributes to allow background setting for the whole
+  block, permit left, right alignment of the block or wide or full spread
+  for the block, and add adjustment to block padding and margins.
 
 **2025-09-26**
 * Working version available and ready for testing prior to submission
@@ -210,8 +293,8 @@ comment within the `blocks4cs.php` file.
   
 **2025-04-26
 * Working version with all blocks using Alpine.js.  But back-end would
-  not use Alpine.js.  Need to refactor it all to use PHP only.
+  not use Alpine.js.  So needed to refactor it all to use PHP only.
 
 
 **2025-04-02
-* First attempt to move the Shortcode plugin to a block
+* First attempt to move the Shortcode plugin cs-js-integration to a block

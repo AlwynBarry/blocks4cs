@@ -108,6 +108,10 @@ return array(
 				'type' => 'string',
 				'default' => 'demo'
 			),
+			'date_start' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'days_ahead' => array(
 				'type' => 'integer',
 				'default' => 45
@@ -194,6 +198,10 @@ return array(
 			'church_name' => array(
 				'type' => 'string',
 				'default' => 'demo'
+			),
+			'date_start' => array(
+				'type' => 'string',
+				'default' => ''
 			),
 			'days_ahead' => array(
 				'type' => 'integer',

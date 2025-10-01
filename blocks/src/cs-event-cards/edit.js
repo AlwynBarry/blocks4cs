@@ -58,7 +58,15 @@ export default function Edit( { attributes, setAttributes } ) {
 							value={ attributes.church_name }
 							help={ __( "The church name from the start of the ChurchSuite URL", "blocks4cs" ) }
 						/>
-					</PanelRow>	
+					</PanelRow>
+					<PanelRow>
+						<TextControl
+							label={ __( "Start date", "blocks4cs" ) }
+							onChange={ ( new_date ) => setAttributes( { date_start : new_date } ) }
+							value={ attributes.date_start }
+							help={ __( "The start date of the events in the Event List (Format: yyyy-mm-dd; Default: today)", "blocks4cs" ) }
+						/>
+					</PanelRow>
 					<PanelRow>
 						<NumberControl
 							label={ __( "Days Ahead", "blocks4cs" ) }

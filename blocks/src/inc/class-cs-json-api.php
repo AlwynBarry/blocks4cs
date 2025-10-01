@@ -162,7 +162,7 @@ class Cs_JSON_API {
 	 * @return string			the boolean sanitized to '0' or '1', or
 	 * 							'' if the supplied value was not legal.
 	 */ 
-	protected static function sanitize_boolean( string $value ) : string {
+	public static function sanitize_boolean( string $value ) : string {
 		$filtered = filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
 		return ( is_null( $filtered ) ? '' : ( ( $filtered ) ? '1' : '0' ) );
 	}
@@ -176,9 +176,14 @@ class Cs_JSON_API {
 	 * @return string			the sanitized value, which is a valid date string,
 	 * 							or '' if the supplied value was not a merge param. 
 	 */ 
-	protected static function sanitize_date( string $value ) : string {
+	public static function sanitize_date( string $value ) : string {
+		// Two part check - the first works out whether the string gives a valid date value
 		$validated_date = \DateTime::createFromFormat( 'Y-m-d', $value );
-		return ( $validated_date ) ? $validated_date->format('Y-m-d') : '';
+		// the second checks that the values are in valid range for each of year, month and day
+		$ymd = explode('-', $value);
+		return ( $validated_date && ( count( $ymd ) == 3 ) && checkdate( intval( $ymd[1] ) , intval( $ymd[2] ), intval( $ymd[0] ) ) )
+					? $validated_date->format('Y-m-d')
+					: '';
 	}
 
 	/*
@@ -190,7 +195,7 @@ class Cs_JSON_API {
 	 * @return string			the sanitized value, which is a merge param,
 	 * 							or '' if the supplied value was not a merge param. 
 	 */ 
-	protected static function sanitize_merge( string $value ) : string {
+	public static function sanitize_merge( string $value ) : string {
 		$value = strtolower( trim( strval( $value ) ) );
 		return ( in_array( $value, \amb_dev\b4cs\Cs_JSON_API::MERGE_VALUES ) ) ? $value : '';
 	}
@@ -205,7 +210,7 @@ class Cs_JSON_API {
 	 * @return string			the sanitized value, which is a natural integer,
 	 * 							or '' if the supplied value was not valid
 	 */ 
-	protected static function sanitize_natural( string $value ) : string {
+	public static function sanitize_natural( string $value ) : string {
 		return ( is_numeric( $value ) && ( intval( $value ) >= 0 ) ) ? strval( intval( $value ) ) : '';
 	}
 
@@ -219,7 +224,7 @@ class Cs_JSON_API {
 	 * @return string			the sanitized value, which is a positive integer,
 	 * 							or '' if the supplied value was not valid
 	 */ 
-	protected static function sanitize_positive( string $value ) : string {
+	public static function sanitize_positive( string $value ) : string {
 		return ( is_numeric( $value ) && ( intval( $value ) > 0 ) ) ? strval( intval( $value ) ) : '';
 	}
 
@@ -233,7 +238,7 @@ class Cs_JSON_API {
 	 * @return string			the sanitized natural array values or '' if
 	 * 							none of the values in the array was valid
 	 */ 
-	protected static function sanitize_natural_array( string $values ) : string {
+	public static function sanitize_natural_array( string $values ) : string {
 		$valuesArray = explode( ',', $values );
 		$result = '';
 		for ( $i = 0; $i < count( $valuesArray ); $i++ ) {
@@ -256,7 +261,7 @@ class Cs_JSON_API {
 	 * @return string			the sanitized value with special characters
 	 * 							encoded as html entries
 	 */ 
-	protected static function sanitize_string( string $value ) : string {
+	public static function sanitize_string( string $value ) : string {
 		return \htmlspecialchars( trim( $value ) );
 	}
 
